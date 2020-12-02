@@ -22,17 +22,21 @@
  
   // establish connection with database
   <?php
-$serverName = "simplewebtp044739.database.windows.net";
-$connectionOptions = array(
-"Database" => "simpleweb",
-"Uid" => "simpleweb",
-"PWD" => "Simple@web");
-//Establishes the connection
-$conn = sqlsrv_connect($serverName, $connectionOptions);
-if (!$conn)
-{
-die("Error connection: ".sqlsrv_errors());
+// PHP Data Objects(PDO) Sample Code:
+try {
+    $conn = new PDO("sqlsrv:server = tcp:simplewebtp044739.database.windows.net,1433; Database = simpleweb", "simpleweb", "{your_password_here}");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
+catch (PDOException $e) {
+    print("Error connecting to SQL Server.");
+    die(print_r($e));
+}
+
+// SQL Server Extension Sample Code:
+$connectionInfo = array("UID" => "simpleweb", "pwd" => "Simple@web", "Database" => "simpleweb", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
+$serverName = "tcp:simplewebtp044739.database.windows.net,1433";
+$conn = sqlsrv_connect($serverName, $connectionInfo);
+ 
 $tsql= "SELECT * FROM [dbo].[restaurant]";
 $getResults= sqlsrv_query($conn, $tsql);
 if ($getResults == FALSE)
